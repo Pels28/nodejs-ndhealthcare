@@ -1,0 +1,219 @@
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  // service: process.env.EMAIL_SERVICE || "gmail",
+  host: process.env.EMAIL_SERVICE || "mail.ndhealthcare.net",
+  port: 587, // Common SMTP port
+  secure: false, // Use TLS
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
+
+// Email template generator
+const generateEmailTemplate = (appointmentDetails, isAdmin = false) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: 'Helvetica Neue', Arial, sans-serif;
+          line-height: 1.8;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 0;
+        }
+        .header {
+          text-align: center;
+          padding: 30px 0 20px;
+          border-bottom: 3px solid #FF6B00;
+        }
+        .logo {
+          height: 60px;
+          width: auto;
+          margin-bottom: 15px;
+        }
+        .content {
+          padding: 30px;
+        }
+        h1 {
+          color: #FF6B00;
+          font-size: 24px;
+          font-weight: 300;
+          letter-spacing: 1px;
+          margin: 0 0 25px;
+          text-align: center;
+          text-transform: uppercase;
+        }
+        .divider {
+          height: 1px;
+          background: linear-gradient(to right, transparent, #FF6B00, transparent);
+          margin: 25px 0;
+        }
+        .detail-row {
+          display: flex;
+          margin-bottom: 12px;
+        }
+        .detail-label {
+          font-weight: 600;
+          width: 120px;
+          color: #666;
+        }
+        .detail-value {
+          flex: 1;
+        }
+        .footer {
+          margin-top: 40px;
+          font-size: 11px;
+          color: #999;
+          text-align: center;
+          letter-spacing: 0.5px;
+        }
+        .signature {
+          font-style: italic;
+          margin-top: 30px;
+          text-align: center;
+          color: #555;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <img src="https://i.postimg.cc/x8yzWf9R/logo.png" alt="ND Healthcare Logo" class="logo">
+      </div>
+      
+      <div class="content">
+        <h1>${isAdmin ? "New Appointment" : "Appointment Confirmed"}</h1>
+        
+        ${
+          !isAdmin
+            ? `
+          <p style="text-align: center;">Dear ${appointmentDetails.name},</p>
+          <p style="text-align: center;">Thank you for choosing our care services.</p>
+        `
+            : `
+          <p style="text-align: center;">A new appointment request was submitted:</p>
+        `
+        }
+        
+        <div class="divider"></div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Service</div>
+          <div class="detail-value">${appointmentDetails.service}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Date</div>
+          <div class="detail-value">${new Date(
+            appointmentDetails.preferredDate
+          ).toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}</div>
+        </div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Time</div>
+          <div class="detail-value">${formatTime(
+            appointmentDetails.preferredTime
+          )}</div>
+        </div>
+        
+        ${
+          appointmentDetails.description
+            ? `
+          <div class="detail-row">
+            <div class="detail-label">Notes</div>
+            <div class="detail-value">${appointmentDetails.description}</div>
+          </div>
+        `
+            : ""
+        }
+        
+        ${
+          isAdmin
+            ? `
+          <div class="divider"></div>
+          <div class="detail-row">
+            <div class="detail-label">Client</div>
+            <div class="detail-value">${appointmentDetails.name}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Contact</div>
+            <div class="detail-value">${appointmentDetails.phoneNumber}<br>${appointmentDetails.email}</div>
+          </div>
+        `
+            : ""
+        }
+        
+        <div class="divider"></div>
+        
+        ${
+          !isAdmin
+            ? `
+          <p style="text-align: center; font-size: 14px;">
+            Please contact us at least 24 hours in advance<br>
+            if you need to reschedule or cancel.
+          </p>
+        `
+            : ""
+        }
+        
+        <div class="signature">
+          <p>Warm regards,<br>The ND Healthcare Team</p>
+        </div>
+        
+        <div class="footer">
+          <p>ND Healthcare &copy; ${new Date().getFullYear()}</p>
+          <p>${
+            process.env.COMPANY_ADDRESS ||
+            "City Galleria, 4th Floor opposite the Accra Mall off the Spintex Road,"
+          }</p>
+          <p>${process.env.COMPANY_PHONE || "Phone: 024 823 3368"}</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+// Helper function to format time
+const formatTime = (timeString) => {
+  const [hours, minutes] = timeString.split(":");
+  const hour = parseInt(hours);
+  return `${hour > 12 ? hour - 12 : hour}:${minutes} ${
+    hour >= 12 ? "PM" : "AM"
+  }`;
+};
+
+// Send to Client
+const sendClientConfirmation = async (appointmentDetails) => {
+  const mailOptions = {
+    from: `ND Healthcare <${process.env.EMAIL_USER}>`,
+    to: appointmentDetails.email,
+    subject: `Your Appointment Confirmation - ${appointmentDetails.service}`,
+    html: generateEmailTemplate(appointmentDetails),
+  };
+  await transporter.sendMail(mailOptions);
+};
+
+// Send to Admin
+const sendAdminNotification = async (appointmentDetails) => {
+  const mailOptions = {
+    from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
+    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    subject: `New Appointment: ${appointmentDetails.service} - ${appointmentDetails.name}`,
+    html: generateEmailTemplate(appointmentDetails, true),
+  };
+  await transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendClientConfirmation, sendAdminNotification };
