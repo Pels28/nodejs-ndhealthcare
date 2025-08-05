@@ -5,9 +5,12 @@ const {
 } = require("../utils/email");
 const { validateAppointment } = require("../middlewares/validator");
 const User = require("../models/usersModel");
+const dbConnect = require("../lib/dbConnect");
 
 exports.createAppointment = async (req, res) => {
   try {
+
+    await dbConnect(); // Ensure DB connection is established
     const {
       name,
       phoneNumber,
