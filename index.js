@@ -4,22 +4,19 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const appointmentRoutes = require("./routers/appointmentRoutes");
-
+const dbConnect = require("./lib/dbConnect");
 
 const app = express();
 app.use(cors());
 app.use(helmet());
-
 app.use(cookieParser());
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-mongoose.connect(process.env.MONGO_URI, {
-})
-.then(() => console.log("MongoDB connected"))
-.catch((err) => console.error("MongoDB connection error:", err));
+// Initialize DB connection
+dbConnect().then(() => {
+  console.log("MongoDB connected");
+}).catch(err => console.error('MongoDB connection error:', err));
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the ND Healthcare API" });
