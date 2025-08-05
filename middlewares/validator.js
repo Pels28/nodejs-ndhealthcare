@@ -4,7 +4,7 @@ const appointmentSchema = Joi.object({
   name: Joi.string().min(2).max(100).required(),
   phoneNumber: Joi.string().pattern(/^[0-9]{10}$/).required(),
   email: Joi.string().email().min(6).max(60).required(),
-  description: Joi.string().min(10).max(500).required(),
+  description: Joi.string().min(5).max(500).required(),
   preferredDate: Joi.date().greater("now").required(),
   preferredTime: Joi.string().required(),
   service: Joi.string().valid(
