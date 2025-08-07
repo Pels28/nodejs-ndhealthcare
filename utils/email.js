@@ -14,6 +14,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+  const adminEmails = [
+    process.env.ADMIN_EMAIL_1 || process.env.EMAIL_USER,  // Primary admin
+    process.env.ADMIN_EMAIL_2,                            // Secondary admin
+  ].filter(Boolean);
+
 // Email template generator
 const generateEmailTemplate = (appointmentDetails, isAdmin = false) => {
   return `

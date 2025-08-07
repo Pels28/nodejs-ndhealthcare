@@ -40,7 +40,7 @@ const reviewSchema = Joi.object({
   location: Joi.string().min(2).max(100).required(),
   rating: Joi.number().min(1).max(5).required(),
   comment: Joi.string().min(5).max(500).required(),
-  image: Joi.string().uri().optional(),
+  image: Joi.string().optional(),
 });
 
 const validateAppointment = (data) => {
