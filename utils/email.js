@@ -672,7 +672,7 @@ const sendClientConfirmation = async (appointmentDetails) => {
 const sendAdminNotification = async (appointmentDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    to: process.env.ADMIN_EMAIL,
     subject: `New Appointment: ${appointmentDetails.service} - ${appointmentDetails.name}`,
     html: generateEmailTemplate(appointmentDetails, true),
   };
@@ -693,7 +693,7 @@ const sendPartnerConfirmation = async (partnershipDetails) => {
 const sendPartnerAdminNotification = async (partnershipDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    to: process.env.ADMIN_EMAIL ,
     subject: `New Partnership Request: ${partnershipDetails.institution} - ${partnershipDetails.name}`,
     html: generatePartnershipEmailTemplate(partnershipDetails, true),
   };
@@ -703,7 +703,7 @@ const sendPartnerAdminNotification = async (partnershipDetails) => {
 const sendReviewAdminNotification = async (reviewDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    to: process.env.ADMIN_EMAIL ,
     subject: `New Review: ${reviewDetails.name} (${reviewDetails.rating}★) - ${reviewDetails.location}`,
     html: generateReviewAdminTemplate(reviewDetails),
   };
@@ -724,7 +724,7 @@ const sendContactConfirmation = async (contactDetails) => {
 const sendContactAdminNotification = async (contactDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    to: process.env.ADMIN_EMAIL ,
     subject: `New Contact Form Submission: ${contactDetails.subject} - ${contactDetails.name}`,
     html: generateContactEmailTemplate(contactDetails, true),
   };
