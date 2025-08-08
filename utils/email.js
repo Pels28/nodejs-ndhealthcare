@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   // service: process.env.EMAIL_SERVICE || "gmail",
-  host: "auth.smtp.one.office.com",
+  host: "smtp.livemail.co.uk",
   port: 587, // Common SMTP port
   secure: false, // Use TLS
   auth: {
