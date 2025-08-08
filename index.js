@@ -2,18 +2,22 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
 const appointmentRoutes = require("./routers/appointmentRoutes");
 const partnershipRoutes = require("./routers/partnershipRoutes");
 const dbConnect = require("./lib/dbConnect");
 const reviewRoutes = require("./routers/reviewRoutes")
+const contactRoutes = require("./routers/contactRoutes")
 
 const app = express();
 app.use(cors());
 app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }));
+
+
+
 
 // Initialize DB connection
 dbConnect().then(() => {
@@ -27,6 +31,8 @@ app.get("/", (req, res) => {
 app.use("/api", appointmentRoutes);
 app.use("/api/partnerships", partnershipRoutes);
 app.use("/api/reviews", reviewRoutes)
+app.use("/api/contact", contactRoutes)
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

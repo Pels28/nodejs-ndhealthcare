@@ -1,4 +1,3 @@
-const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
@@ -16,8 +15,9 @@ const reviewSchema = new mongoose.Schema(
     },
     comment: { type: String, required: [true, "Comment is required"] },
     image: {
-      type: String,
-      required: [false]
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Image",
+      required: false,
     },
   },
   {

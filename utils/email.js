@@ -14,10 +14,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-  const adminEmails = [
-    process.env.ADMIN_EMAIL_1 || process.env.EMAIL_USER,  // Primary admin
-    process.env.ADMIN_EMAIL_2,                            // Secondary admin
-  ].filter(Boolean);
+const adminEmails = [
+  process.env.ADMIN_EMAIL_1 || process.env.EMAIL_USER, // Primary admin
+  process.env.ADMIN_EMAIL_2, // Secondary admin
+].filter(Boolean);
 
 // Email template generator
 const generateEmailTemplate = (appointmentDetails, isAdmin = false) => {
@@ -438,9 +438,13 @@ const generateReviewAdminTemplate = (reviewDetails) => {
         <h1>New Review Submitted</h1>
         <p style="text-align: center;">A new review has been submitted by a client:</p>
         
-        ${reviewDetails.image ? `
+        ${
+          reviewDetails.image
+            ? `
           <img src="${reviewDetails.image}" alt="Reviewer Avatar" class="review-avatar">
-        ` : ''}
+        `
+            : ""
+        }
         
         <div class="divider"></div>
         
@@ -457,7 +461,9 @@ const generateReviewAdminTemplate = (reviewDetails) => {
         <div class="detail-row">
           <div class="detail-label">Rating</div>
           <div class="detail-value rating-stars">
-            ${'★'.repeat(reviewDetails.rating)}${'☆'.repeat(5 - reviewDetails.rating)}
+            ${"★".repeat(reviewDetails.rating)}${"☆".repeat(
+    5 - reviewDetails.rating
+  )}
             (${reviewDetails.rating}/5)
           </div>
         </div>
@@ -484,6 +490,157 @@ const generateReviewAdminTemplate = (reviewDetails) => {
           <p>ND Healthcare &copy; ${new Date().getFullYear()}</p>
           <p>${"City Galleria, 4th Floor opposite the Accra Mall off the Spintex Road,"}</p>
           <p>${"Phone: 024 823 3368"}</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+const generateContactEmailTemplate = (contactDetails, isAdmin = false) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        /* Include all your existing styles here */
+        body {
+          font-family: 'Helvetica Neue', Arial, sans-serif;
+          line-height: 1.8;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 0;
+        }
+        .header {
+          text-align: center;
+          padding: 30px 0 20px;
+          border-bottom: 3px solid #FF6B00;
+        }
+        .logo {
+          height: 150px;
+          width: 250px;
+          margin-bottom: 10px;
+        }
+        .content {
+          padding: 30px;
+        }
+        h1 {
+          color: #FF6B00;
+          font-size: 24px;
+          font-weight: 300;
+          letter-spacing: 1px;
+          margin: 0 0 25px;
+          text-align: center;
+          text-transform: uppercase;
+        }
+        .divider {
+          height: 1px;
+          background: linear-gradient(to right, transparent, #FF6B00, transparent);
+          margin: 25px 0;
+        }
+        .detail-row {
+          display: flex;
+          margin-bottom: 12px;
+        }
+        .detail-label {
+          font-weight: 600;
+          width: 120px;
+          color: #666;
+        }
+        .detail-value {
+          flex: 1;
+        }
+        .footer {
+          margin-top: 40px;
+          font-size: 11px;
+          color: #999;
+          text-align: center;
+          letter-spacing: 0.5px;
+        }
+        .signature {
+          font-style: italic;
+          margin-top: 30px;
+          text-align: center;
+          color: #555;
+        }
+        .highlight-box {
+          background-color: #FFF8F2;
+          border-left: 4px solid #FF6B00;
+          padding: 15px;
+          margin: 20px 0;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
+      </div>
+      
+      <div class="content">
+        <h1>${isAdmin ? "New Contact Message" : "Message Received"}</h1>
+        
+        ${
+          !isAdmin
+            ? `
+          <p style="text-align: center;">Dear ${contactDetails.name},</p>
+          <p style="text-align: center;">Thank you for contacting ND Healthcare.</p>
+          <div class="highlight-box">
+            <p style="text-align: center; margin: 0;">We've received your message and will respond as soon as possible.</p>
+          </div>
+        `
+            : `
+          <p style="text-align: center;">A new contact form submission was received:</p>
+        `
+        }
+        
+        <div class="divider"></div>
+        
+        <div class="detail-row">
+          <div class="detail-label">Subject</div>
+          <div class="detail-value">${contactDetails.subject}</div>
+        </div>
+        
+        <div class="detail-row" style="display: block;">
+          <div class="detail-label">Message</div>
+          <div class="detail-value" style="margin-top: 10px;">
+            ${contactDetails.message}
+          </div>
+        </div>
+        
+        ${
+          isAdmin
+            ? `
+          <div class="divider"></div>
+          <div class="detail-row">
+            <div class="detail-label">From</div>
+            <div class="detail-value">
+              ${contactDetails.name}<br>
+              ${contactDetails.email}<br>
+              ${contactDetails.phoneNumber}
+            </div>
+          </div>
+          <div class="divider"></div>
+          <p style="text-align: center; font-size: 14px;">
+            Please respond to this inquiry within 24 hours.
+          </p>
+        `
+            : `
+          <div class="divider"></div>
+          <p style="text-align: center; font-size: 14px;">
+            If you need immediate assistance, please call us at "024 823 3368".
+          </p>
+        `
+        }
+        
+        <div class="signature">
+          <p>Warm regards,<br>The ND Healthcare Team</p>
+        </div>
+        
+        <div class="footer">
+          <p>ND Healthcare &copy; ${new Date().getFullYear()}</p>
+          <p>"City Galleria, 4th Floor opposite the Accra Mall off the Spintex Road,"</p>
+          <p>"Phone: 024 823 3368"</p>
         </div>
       </div>
     </body>
@@ -553,10 +710,33 @@ const sendReviewAdminNotification = async (reviewDetails) => {
   await transporter.sendMail(mailOptions);
 };
 
+const sendContactConfirmation = async (contactDetails) => {
+  const mailOptions = {
+    from: `ND Healthcare <${process.env.EMAIL_USER}>`,
+    to: contactDetails.email,
+    subject: `We've received your message - ${contactDetails.subject}`,
+    html: generateContactEmailTemplate(contactDetails),
+  };
+  await transporter.sendMail(mailOptions);
+};
+
+// Send to Admin
+const sendContactAdminNotification = async (contactDetails) => {
+  const mailOptions = {
+    from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
+    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    subject: `New Contact Form Submission: ${contactDetails.subject} - ${contactDetails.name}`,
+    html: generateContactEmailTemplate(contactDetails, true),
+  };
+  await transporter.sendMail(mailOptions);
+};
+
 module.exports = {
   sendClientConfirmation,
   sendAdminNotification,
   sendPartnerConfirmation,
   sendPartnerAdminNotification,
-  sendReviewAdminNotification
+  sendReviewAdminNotification,
+  sendContactAdminNotification,
+  sendContactConfirmation
 };

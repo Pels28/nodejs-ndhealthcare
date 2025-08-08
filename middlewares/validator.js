@@ -40,7 +40,16 @@ const reviewSchema = Joi.object({
   location: Joi.string().min(2).max(100).required(),
   rating: Joi.number().min(1).max(5).required(),
   comment: Joi.string().min(5).max(500).required(),
-  image: Joi.string().optional(),
+});
+
+const contactSchema = Joi.object({
+  name: Joi.string().min(2).max(100).required(),
+  phoneNumber: Joi.string()
+    .pattern(/^[0-9]{10}$/)
+    .required(),
+  email: Joi.string().email().min(6).max(60).required(),
+  subject: Joi.string().min(2).max(500).required(),
+  message: Joi.string().min(2).max(1000).required(),
 });
 
 const validateAppointment = (data) => {
@@ -55,4 +64,8 @@ const validateReview = (data) => {
   return reviewSchema.validate(data);
 };
 
-module.exports = { validateAppointment, validatePartnership, validateReview };
+const validateContact = (data) => {
+  return contactSchema.validate(data);
+};
+
+module.exports = { validateAppointment, validatePartnership, validateReview, validateContact };
