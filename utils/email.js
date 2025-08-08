@@ -2,9 +2,9 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   // service: process.env.EMAIL_SERVICE || "gmail",
-  host: "smtp.livemail.co.uk",
-  port: 587, // Common SMTP port
-  secure: false, // Use TLS
+  host: process.env.EMAIL_SERVICE ,
+  port: 465, // Common SMTP port
+  secure: true, // Use TLS
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
@@ -13,6 +13,23 @@ const transporter = nodemailer.createTransport({
   //   rejectUnauthorized: false,
   // },
 });
+
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.livemail.co.uk",
+//   port: 465, // Recommended port for Livemail
+//   secure: false, // Use STARTTLS
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASSWORD
+//   },
+//   tls: {
+//     // Temporary for debugging (remove in production)
+//     rejectUnauthorized: false,
+//     minVersion: "TLSv1.2"
+//   },
+//   logger: true, // Enable verbose logging
+//   debug: true // Show SMTP traffic
+// });
 
 const adminEmails = [
   process.env.ADMIN_EMAIL_1 || process.env.EMAIL_USER, // Primary admin
