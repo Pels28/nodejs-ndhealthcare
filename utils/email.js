@@ -32,8 +32,9 @@ const transporter = nodemailer.createTransport({
 // });
 
 const adminEmails = [
-  process.env.ADMIN_EMAIL_1 || process.env.EMAIL_USER, // Primary admin
-  process.env.ADMIN_EMAIL_2, // Secondary admin
+  process.env.EMAIL_USER,  // Primary admin
+  process.env.ADMIN_EMAIL,  // Secondary admin
+  process.env.ADMIN_EMAIL_2   // Tertiary admin
 ].filter(Boolean);
 
 // Email template generator
@@ -107,7 +108,7 @@ const generateEmailTemplate = (appointmentDetails, isAdmin = false) => {
     </head>
     <body>
       <div class="header">
-        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -284,10 +285,11 @@ const generatePartnershipEmailTemplate = (
           margin: 20px 0;
         }
       </style>
+      http://localhost:8000/logo.png
     </head>
     <body>
       <div class="header">
-        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -448,7 +450,7 @@ const generateReviewAdminTemplate = (reviewDetails) => {
     </head>
     <body>
       <div class="header">
-        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -591,7 +593,7 @@ const generateContactEmailTemplate = (contactDetails, isAdmin = false) => {
     </head>
     <body>
       <div class="header">
-        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -689,7 +691,7 @@ const sendClientConfirmation = async (appointmentDetails) => {
 const sendAdminNotification = async (appointmentDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL,
+    to: adminEmails.join(', '),
     subject: `New Appointment: ${appointmentDetails.service} - ${appointmentDetails.name}`,
     html: generateEmailTemplate(appointmentDetails, true),
   };
@@ -710,7 +712,7 @@ const sendPartnerConfirmation = async (partnershipDetails) => {
 const sendPartnerAdminNotification = async (partnershipDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL ,
+    to: adminEmails.join(', '),
     subject: `New Partnership Request: ${partnershipDetails.institution} - ${partnershipDetails.name}`,
     html: generatePartnershipEmailTemplate(partnershipDetails, true),
   };
@@ -720,7 +722,7 @@ const sendPartnerAdminNotification = async (partnershipDetails) => {
 const sendReviewAdminNotification = async (reviewDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL ,
+    to: adminEmails.join(', '),
     subject: `New Review: ${reviewDetails.name} (${reviewDetails.rating}★) - ${reviewDetails.location}`,
     html: generateReviewAdminTemplate(reviewDetails),
   };
@@ -741,7 +743,7 @@ const sendContactConfirmation = async (contactDetails) => {
 const sendContactAdminNotification = async (contactDetails) => {
   const mailOptions = {
     from: `ND Healthcare Website <${process.env.EMAIL_USER}>`,
-    to: process.env.ADMIN_EMAIL ,
+    to: adminEmails.join(', '),
     subject: `New Contact Form Submission: ${contactDetails.subject} - ${contactDetails.name}`,
     html: generateContactEmailTemplate(contactDetails, true),
   };
