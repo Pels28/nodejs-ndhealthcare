@@ -108,7 +108,7 @@ const generateEmailTemplate = (appointmentDetails, isAdmin = false) => {
     </head>
     <body>
       <div class="header">
-        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -285,11 +285,10 @@ const generatePartnershipEmailTemplate = (
           margin: 20px 0;
         }
       </style>
-      http://localhost:8000/logo.png
     </head>
     <body>
       <div class="header">
-        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -450,7 +449,7 @@ const generateReviewAdminTemplate = (reviewDetails) => {
     </head>
     <body>
       <div class="header">
-        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
@@ -593,7 +592,7 @@ const generateContactEmailTemplate = (contactDetails, isAdmin = false) => {
     </head>
     <body>
       <div class="header">
-        <img src="https://nodejs-ndhealthcare.vercel.app/logo.png" alt="ND Healthcare Logo" class="logo">
+        <img src="https://i.postimg.cc/L8n69hqD/logo.png" alt="ND Healthcare Logo" class="logo">
       </div>
       
       <div class="content">
